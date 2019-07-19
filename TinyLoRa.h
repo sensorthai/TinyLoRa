@@ -40,7 +40,7 @@
 #include <avr/pgmspace.h>
 
 // uncomment for debug output
-#define DEBUG
+// #define DEBUG
 
 /** RFM channel options */
 typedef enum rfm_channels
