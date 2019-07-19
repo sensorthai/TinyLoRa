@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sx_5fregver',['SX_REGVER',['../_tiny_lo_ra_8h.html#aad28381550a55c6b930c1b6587ff76d1',1,'TinyLoRa.h']]]
+  ['us902',['US902',['../_tiny_lo_ra_8h.html#a9ee77d197f948870f158051e41371488',1,'TinyLoRa.h']]]
 ];
