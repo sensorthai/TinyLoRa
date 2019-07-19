@@ -273,7 +273,7 @@ void TinyLoRa::setChannel(rfm_channels_t channel) {
               The RFM module's slave select pin (rfm_nss).
 */
 /**************************************************************************/
-TinyLoRa::TinyLoRa(int8_t rfm_irq, int8_t rfm_nss) {
+TinyLoRa::TinyLoRa(uint8_t rfm_irq, uint8_t rfm_nss) {
   _irq = rfm_irq;
   _cs = rfm_nss;
 }
@@ -302,21 +302,20 @@ bool TinyLoRa::begin()
   pinMode(_irq, INPUT);
 
   uint8_t ver = RFM_Read(0x42);
-  if(ver!=18){
+  if (ver != SX_REGVER)
     return 0;
-  }
-  
+
   //Switch RFM to sleep
-  RFM_Write(0x01,MODE_SLEEP);
+  RFM_Write(REG_OP_MODE,MODE_SLEEP);
 
   //Set RFM in LoRa mode
-  RFM_Write(0x01,MODE_LORA);
+  RFM_Write(REG_OP_MODE,MODE_LORA);
 
   //PA pin (maximal power)
-  RFM_Write(0x09,0xFF);
+  RFM_Write(REG_PA_CONFIG,0xFF);
 
   //Rx Timeout set to 37 symbols
-  RFM_Write(0x1F,0x25);
+  RFM_Write(REG_PREAMBLE_DETECT,0x25);
 
   //Preamble length set to 8 symbols
   //0x0008 + 4 = 12
@@ -367,7 +366,7 @@ void TinyLoRa::RFM_Send_Package(unsigned char *RFM_Tx_Package, unsigned char Pac
   delay(10);
   
   //Switch _irq to TxDone
-  RFM_Write(0x40,0x40);
+  RFM_Write(REG_DIO_MAPPING_1,0x40);
 
   // select rfm channel
   if (_isMultiChan == 1) {
@@ -420,7 +419,7 @@ void TinyLoRa::RFM_Send_Package(unsigned char *RFM_Tx_Package, unsigned char Pac
 /**************************************************************************/
 void TinyLoRa::RFM_Write(unsigned char RFM_Address, unsigned char RFM_Data) 
 {
-  // br: SPI Transfer Debug
+  // SPI Transaction
   #ifdef DEBUG
     Serial.print("SPI Write ADDR: ");
     Serial.print(RFM_Address, HEX);
@@ -433,8 +432,9 @@ void TinyLoRa::RFM_Write(unsigned char RFM_Address, unsigned char RFM_Data)
   //Set NSS pin Low to start communication
   digitalWrite(_cs, LOW);
 
-  //Send Address with MSB 1 to make it a writ command
+  //Send Address with MSB 1 to make it a write command
   SPI.transfer(RFM_Address | 0x80);
+
   //Send Data
   SPI.transfer(RFM_Data);
 
@@ -465,13 +465,15 @@ uint8_t TinyLoRa::RFM_Read(uint8_t RFM_Address) {
     digitalWrite(_cs, HIGH);
 
     SPI.endTransaction();
-      // br: SPI Transfer Debug
+    
+    // SPI Transaction
     #ifdef DEBUG
       Serial.print("SPI Read ADDR: ");
       Serial.print(RFM_Address, HEX);
       Serial.print(" DATA: ");
-      Serial.println(RFM_Data, HEX);
+      Serial.println(RFM_Data);
     #endif
+
     return RFM_Data;
 }
 /**************************************************************************/

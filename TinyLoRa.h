@@ -40,7 +40,7 @@
 #include <avr/pgmspace.h>
 
 // uncomment for debug output
-// #define DEBUG
+#define DEBUG
 
 /** RFM channel options */
 typedef enum rfm_channels
@@ -68,6 +68,9 @@ typedef enum rfm_datarates
   SF12BW125,
 } rfm_datarates_t;
 
+/* RegVersion Identifiers */
+#define SX_REGVER  0x12 ///< Semtech SX1276/77/78/79 
+
 /** Region configuration*/
 #define US902 ///< Used in USA, Canada and South America
 //#define EU863 ///< Used in Europe
@@ -82,6 +85,7 @@ typedef enum rfm_datarates
 
 /* RFM Registers */
 #define REG_PA_CONFIG              0x09 ///<PA selection and Output Power control
+#define REG_PREAMBLE_DETECT        0x1f ///< Preamble detector configuration
 #define REG_PREAMBLE_MSB           0x20 ///<Preamble Length, MSB
 #define REG_PREAMBLE_LSB           0x21 ///<Preamble Length, LSB
 #define REG_FRF_MSB                0x06 ///<RF Carrier Frequency MSB
@@ -90,6 +94,8 @@ typedef enum rfm_datarates
 #define REG_FEI_LSB                0x1E ///<Info from Prev. Header
 #define REG_FEI_MSB                0x1D ///<Number of received bytes
 #define REG_MODEM_CONFIG           0x26 ///<Modem configuration register
+#define REG_OP_MODE                0x01 ///<Operating Mode and LoRa FSK Version
+#define REG_DIO_MAPPING_1          0x40 ///<Mapping of IO1 Pins
 
 /**************************************************************************/
 /*! 
@@ -103,13 +109,13 @@ class TinyLoRa
 		uint16_t frameCounter;  ///<frame counter
     void setChannel(rfm_channels_t channel);
     void setDatarate(rfm_datarates_t datarate);
-    TinyLoRa(int8_t rfm_dio0, int8_t rfm_nss);
+    TinyLoRa(uint8_t rfm_dio0, uint8_t rfm_nss);
 		bool begin(void);
 		void sendData(unsigned char *Data, unsigned char Data_Length, unsigned int Frame_Counter_Tx);
 
 	private:
 		uint8_t randomNum;
-		int8_t _cs, _irq;
+		uint8_t _cs, _irq;
     bool _isMultiChan;
     unsigned char _rfmMSB, _rfmMID, _rfmLSB, _sf, _bw, _modemcfg;
     static const unsigned char LoRa_Frequency[8][3];
