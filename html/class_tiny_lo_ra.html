@@ -86,9 +86,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec6b45f42786fca2fefc4eacbff5c8de"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tiny_lo_ra.html#aec6b45f42786fca2fefc4eacbff5c8de">begin</a> (void)</td></tr>
 <tr class="memdesc:aec6b45f42786fca2fefc4eacbff5c8de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the RFM, including configuring SPI, configuring the frameCounter and txrandomNum.  <a href="#aec6b45f42786fca2fefc4eacbff5c8de">More...</a><br /></td></tr>
 <tr class="separator:aec6b45f42786fca2fefc4eacbff5c8de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62b7d6290007552aadfb7bd2819113af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tiny_lo_ra.html#a62b7d6290007552aadfb7bd2819113af">sendData</a> (unsigned char *Data, unsigned char Data_Length, unsigned int Frame_Counter_Tx)</td></tr>
-<tr class="memdesc:a62b7d6290007552aadfb7bd2819113af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to assemble and send a LoRaWAN package.  <a href="#a62b7d6290007552aadfb7bd2819113af">More...</a><br /></td></tr>
-<tr class="separator:a62b7d6290007552aadfb7bd2819113af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af312339a42abda96f0e8fd09a5924081"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tiny_lo_ra.html#af312339a42abda96f0e8fd09a5924081">sendData</a> (unsigned char *Data, unsigned char Data_Length, unsigned int Frame_Counter_Tx, uint8_t Frame_Port=1)</td></tr>
+<tr class="memdesc:af312339a42abda96f0e8fd09a5924081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to assemble and send a LoRaWAN package.  <a href="#af312339a42abda96f0e8fd09a5924081">More...</a><br /></td></tr>
+<tr class="separator:af312339a42abda96f0e8fd09a5924081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -222,8 +222,8 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 </div>
 </div>
-<a id="a62b7d6290007552aadfb7bd2819113af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62b7d6290007552aadfb7bd2819113af">&#9670;&nbsp;</a></span>sendData()</h2>
+<a id="af312339a42abda96f0e8fd09a5924081"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af312339a42abda96f0e8fd09a5924081">&#9670;&nbsp;</a></span>sendData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,7 +244,13 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>Frame_Counter_Tx</em>&#160;</td>
+          <td class="paramname"><em>Frame_Counter_Tx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>Frame_Port</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -260,6 +266,7 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
     <tr><td class="paramname">*Data</td><td>Pointer to the array of data to be transmitted. </td></tr>
     <tr><td class="paramname">Frame_Counter_Tx</td><td>Frame counter for transfer frames. </td></tr>
     <tr><td class="paramname">Data_Length</td><td>Length of data to be sent. </td></tr>
+    <tr><td class="paramname">Frame_Port</td><td>Frame port to send data from, from 0 to 225. </td></tr>
   </table>
   </dd>
 </dl>
