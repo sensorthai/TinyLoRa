@@ -1,0 +1,168 @@
+// Hello LoRa Single Channel - ABP TTN Single Channel Packet Sender
+// Tutorial Link: https://learn.adafruit.com/the-things-network-for-feather/using-a-feather-32u4
+//
+// Adafruit invests time and resources providing this open source code.
+// Please support Adafruit and open source hardware by purchasing
+// products from Adafruit!
+//
+// Copyright 2015, 2016 Ideetron B.V.
+//
+// Modified by Brent Rubell for Adafruit Industries, 2018
+/************************** Configuration ***********************************/
+/* AS923-925
+Used in Brunei, Cambodia, Hong Kong, Laos, Taiwan, Thailand, Vietnam
+
+Uplink:
+
+923.2 - SF7BW125 to SF12BW125
+923.4 - SF7BW125 to SF12BW125
+923.6 - SF7BW125 to SF12BW125
+923.8 - SF7BW125 to SF12BW125
+924.0 - SF7BW125 to SF12BW125
+924.2 - SF7BW125 to SF12BW125
+924.4 - SF7BW125 to SF12BW125
+924.6 - SF7BW125 to SF12BW125
+924.5 - SF7BW250
+924.8 - FSK
+Downlink:
+
+Uplink channels 1-10 (RX1)
+923.2 - SF10BW125 (RX2)
+
+#ifdef AS923
+const unsigned char PROGMEM TinyLoRa::LoRa_Frequency[8][3] = {
+  { 0xE6, 0xCC, 0xF4 },   //Channel 0 923.200 MHz / 61.035 Hz = 15125747 = 0xE6CCF3  
+  { 0xE6, 0xD9, 0xC0 },   //Channel 1 923.400 MHz / 61.035 Hz = 15129024 = 0xE6D9C0
+  { 0xE6, 0x8C, 0xF3 },   //Channel 2 923.600 MHz / 61.035 Hz = 15132301 = 0xE6E68D
+  { 0xE6, 0x99, 0xC0 },   //Channel 3 923.800 MHz / 61.035 Hz = 15135577 = 0xE6F959
+  { 0xE6, 0xA6, 0x8D },   //Channel 4 924.000 MHz / 61.035 Hz = 15138854 = 0xE70026
+  { 0xE6, 0xB3, 0x5A },   //Channel 5 924.200 MHz / 61.035 Hz = 15142131 = 0xE70CF3
+  { 0xE6, 0xC0, 0x27 },   //Channel 6 924.400 MHz / 61.035 Hz = 15145408 = 0xE719C0
+  { 0xE6, 0x80, 0x27 }    //Channel 7 924.600 MHz / 61.035 Hz = 15148685 = 0xE7268D
+};
+#endif
+
+#define AS923 ///< UUsed in Brunei, Cambodia, Hong Kong, Laos, Taiwan, Thailand, Vietnam
+
+*/
+#include <TinyLoRa.h>
+#include <SPI.h>
+#include <CayenneLPP.h>
+
+
+// Visit your thethingsnetwork.org device console
+// to create an account, or if you need your session keys.
+
+// Network Session Key (MSB)
+//uint8_t NwkSkey[16] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+// Application Session Key (MSB)
+//uint8_t AppSkey[16] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+// Device Address (MSB)
+//uint8_t DevAddr[4] = { 0x00, 0x00, 0x00, 0x00 };
+
+
+// .  Network Session Key
+uint8_t NwkSkey[16] =  { 0xC0, 0xBC, 0xB0, 0xFF, 0x0F, 0xF3, 0xC5, 0xEC, 0x0D, 0xC8, 0x3C, 0x8F, 0x20, 0x8C, 0xFC, 0xDF };
+// LoRaWAN AppSKey, App Session Key 
+uint8_t AppSkey[16] = { 0xD1, 0x85, 0x85, 0x68, 0x33, 0xDA, 0xB3, 0x30, 0x33, 0xAD, 0xE6, 0xEC, 0x8E, 0x87, 0x37, 0x0C };
+// LoRaWAN end-device address (DevAddr) Device Address
+uint8_t DevAddr[4] = { 0x26, 0x04, 0x1A, 0xA7 };
+
+/************************** Example Begins Here ***********************************/
+// Data Packet to Send to TTN
+unsigned char loraData[11] = {"hello LoRa"};
+
+// How many times data transfer should occur, in seconds
+const unsigned int sendInterval = 30;
+
+// Pinout for Feather 32u4 LoRa
+//#8 - used as the radio CS (chip select) pin
+//#7 - used as the radio GPIO0 / IRQ (interrupt request) pin.
+//#4 - used as the radio Reset pin
+// TinyLoRa lora = TinyLoRa(7, 8, 4);
+
+// Pinout for Node Lora V1
+// 10 for Chip select
+// 9 for reset pin
+// 2 for interrupt
+// 
+//TinyLoRa lora = TinyLoRa(2, 10, 9);
+
+// Capteur
+TinyLoRa lora = TinyLoRa(D8, D3, D0);
+
+
+// Pinout for ESP32 heltec
+// 18 for Chip select
+// 14 for reset pin
+// 26 , 35, 34 for interrupt
+// 
+//TinyLoRa lora = TinyLoRa(34, 18, 14);
+
+
+// Pinout for Feather M0 LoRa
+//TinyLoRa lora = TinyLoRa(3, 8, 4);
+
+CayenneLPP lpp(15);
+
+void setup()
+{
+  delay(2000);
+  Serial.begin(115200);
+  while (! Serial);
+ 
+  // Initialize pin LED_BUILTIN as an output
+  pinMode(LED_BUILTIN, OUTPUT);
+  
+  // Initialize LoRa
+  Serial.print("Starting LoRa...");
+  // define channel to send data on
+  lora.setChannel(CH0);
+  // set datarate
+  lora.setDatarate(SF7BW125);
+    if(!lora.begin())
+  {
+    Serial.println("Failed");
+    Serial.println("Check your radio");
+    while(true);
+  }
+  Serial.println("OK");
+}
+
+void loop()
+{
+  Serial.println("Sending LoRa Data...");
+     lpp.reset();
+    int temperature = 32;
+    int humidity = 61;
+    
+    lpp.addTemperature(1, temperature);
+    lpp.addRelativeHumidity(2, humidity);
+
+    // lpp.addTemperature(1, 22.5);
+    // lpp.addBarometricPressure(2, 1073.21);
+    // lpp.addGPS(3, 52.37365, 4.88650, 2);
+    // addDigitalInput
+    // addDigitalOutput
+    // addAnalogInput
+    // addAnalogOutput
+    // addLuminosity
+    // addPresence
+    // addAccelerometer
+    // addGyrometer
+    
+    
+  lora.sendData(lpp.getBuffer(), lpp.getSize(), lora.frameCounter);
+  //lora.sendData(loraData, sizeof(loraData), lora.frameCounter);
+  
+  Serial.print("Frame Counter: ");Serial.println(lora.frameCounter);
+  lora.frameCounter++;
+
+  // blink LED to indicate packet sent
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  
+  Serial.println("delaying...");
+  delay(sendInterval * 1000);
+}
