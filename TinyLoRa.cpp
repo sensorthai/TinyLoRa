@@ -125,6 +125,27 @@ const unsigned char PROGMEM TinyLoRa::LoRa_Frequency[8][3] = {
 };
 #endif
 
+/* #ifdef AS920_CAT
+const unsigned char PROGMEM TinyLoRa::LoRa_Frequency[8][3] = {
+  { 0xE6, 0xCC, 0xF4 },   //Channel 0 923.200 MHz / 61.035 Hz = 15125747 = 0xE6CCF3  
+  { 0xE6, 0xD9, 0xC0 },   //Channel 1 923.400 MHz / 61.035 Hz = 15129024 = 0xE6D9C0
+  { 0xE6, 0xE6, 0x8D },   //Channel 2 922.000 MHz / 61.035 Hz =  
+  { 0xE6, 0xF3, 0x59 },   //Channel 3 922.200 MHz / 61.035 Hz =  
+  { 0xE7, 0x00, 0x26 },   //Channel 4 922.400 MHz / 61.035 Hz = 
+  { 0xE7, 0x0C, 0xF3 },   //Channel 5 922.600 MHz / 61.035 Hz =  
+  { 0xE7, 0x19, 0xC0 },   //Channel 6 922.800 MHz / 61.035 Hz =  
+  { 0xE7, 0x26, 0x8D }    //Channel 7 923.000 MHz / 61.035 Hz =  
+  { 0xE6, 0xE6, 0x8D },   //Channel 8 920.400 MHz / 61.035 Hz =  
+  { 0xE6, 0xF3, 0x59 },   //Channel 9 920.600 MHz / 61.035 Hz =  
+  { 0xE7, 0x00, 0x26 },   //Channel 10 920.800 MHz / 61.035 Hz = 
+  { 0xE7, 0x00, 0x26 },   //Channel 11 921.000 MHz / 61.035 Hz = 
+  { 0xE7, 0x0C, 0xF3 },   //Channel 12 921.200 MHz / 61.035 Hz =  
+  { 0xE7, 0x19, 0xC0 },   //Channel 13 921.400 MHz / 61.035 Hz =  
+  { 0xE7, 0x26, 0x8D }    //Channel 14 921.600 MHz / 61.035 Hz = 
+  { 0xE6, 0xF3, 0x59 },   //Channel 15 921.800 MHz / 61.035 Hz =  
+};
+#endif
+*/
 
 /*
 *****************************************************************************************
